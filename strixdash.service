@@ -1,0 +1,23 @@
+[Unit]
+Description=strixDash single-node model monitoring
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=strixdash
+Group=strixdash
+SupplementaryGroups=render video
+Environment=HOME=/var/lib/strixdash
+StateDirectory=strixdash
+WorkingDirectory=/opt/strixdash
+ExecStart=/usr/bin/python3 /opt/strixdash/server.py --data-dir /var/lib/strixdash
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+UMask=0077
+MemoryMax=192M
+CPUQuota=10%
+
+[Install]
+WantedBy=multi-user.target

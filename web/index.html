@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#121416">
+    <meta name="description" content="strixDash single-node inference monitor">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f0a445'/%3E%3Cpath d='M7 21.5 12.5 16 17 20.5 25 12.5' fill='none' stroke='%231b1610' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <title>strixDash · EVO-X2</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Dashboard navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M7 21.5 12.5 16 17 20.5 25 12.5" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12.5h4v4" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="brand-copy"><strong>strixDash</strong><span>NODE MONITOR</span></div>
+        </div>
+
+        <div class="node-card">
+          <span class="node-status-dot" id="sidebar-status-dot"></span>
+          <div class="node-card-copy"><strong>GMKtec EVO-X2</strong><span>Strix Halo · 128GB RAM</span></div>
+          <span class="node-card-more" aria-hidden="true">···</span>
+        </div>
+
+        <nav class="primary-nav" aria-label="Primary">
+          <button class="nav-item is-active" type="button" data-page-target="overview" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg><span>Overview</span>
+          </button>
+          <button class="nav-item" type="button" data-page-target="performance">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18 9 12l4 3 7-9"/><path d="M16 6h4v4"/></svg><span>Performance</span>
+          </button>
+          <button class="nav-item" type="button" data-page-target="resources">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 13h5M8 16h3"/></svg><span>Resources</span>
+          </button>
+          <button class="nav-item" type="button" data-page-target="activity">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6.5h14M5 12h14M5 17.5h9"/><circle cx="18" cy="17.5" r="2"/></svg><span>Activity</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="sidebar-endpoint"><span>Endpoint</span><strong id="node-endpoint">Local node</strong></div>
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
+            <span class="theme-icon theme-icon-sun" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.64 5.64l1.42 1.42M16.94 16.94l1.42 1.42M18.36 5.64l-1.42 1.42M7.06 16.94l-1.42 1.42"/></svg></span>
+            <span class="theme-icon theme-icon-moon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 15.3A7.8 7.8 0 0 1 8.7 4.5 8.2 8.2 0 1 0 19.5 15.3Z"/></svg></span>
+            <span id="theme-label">Light theme</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="topbar-heading">
+            <p class="eyebrow">SINGLE NODE <span>/</span> <span id="host-label">STRIX HALO</span></p>
+            <h1 id="page-heading">Overview</h1>
+          </div>
+          <div class="topbar-actions">
+            <div class="connection-status" id="connection-status" data-state="connecting"><span class="status-dot"></span><span id="connection-label">Connecting</span></div>
+            <div class="last-update"><span>Last update</span><strong id="last-update">—</strong></div>
+            <button class="icon-button" id="refresh-button" type="button" title="Refresh now" aria-label="Refresh now">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3.9L4 9"/><path d="M4 5v4h4M4 13a8 8 0 0 0 14.9 3.9L20 15"/><path d="M20 19v-4h-4"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="notice-stack" aria-live="polite">
+          <div class="notice is-hidden" id="stale-banner" role="status">
+            <span class="notice-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4 21 20H3L12 4Z"/><path d="M12 9v5M12 17h.01"/></svg></span>
+            <div><strong id="stale-title">Data needs attention</strong><span id="stale-detail">Waiting for the node to respond.</span></div>
+          </div>
+        </div>
+
+        <section class="page is-active" data-page="overview" aria-labelledby="page-heading">
+          <div class="page-intro">
+            <div>
+              <p class="eyebrow accent">QWEN RUNTIME</p>
+              <h2 id="model-title">Qwen 3.8 Flash Next</h2>
+              <p class="muted" id="model-subtitle">Inference service · waiting for a sample</p>
+            </div>
+            <div class="model-state" id="model-state" data-state="unknown"><span class="state-dot"></span><div><strong id="model-state-label">Checking service</strong><span id="model-state-detail">No model sample yet</span></div></div>
+          </div>
+
+          <div class="kpi-grid">
+            <article class="kpi-card kpi-accent">
+              <div class="card-label"><span>Output / last minute</span><span class="label-help" title="Rolling wall-clock rate from completion-reported tokens">i</span></div>
+              <div class="kpi-value"><strong id="output-rate">—</strong><span>t/s</span></div>
+              <div class="kpi-meta"><span id="output-rate-meta">Waiting for data</span><svg class="sparkline" id="spark-output" viewBox="0 0 120 36" aria-label="Output rate trend"><path data-spark-area></path><path data-spark-line></path></svg></div>
+            </article>
+            <article class="kpi-card">
+              <div class="card-label"><span>Active requests</span></div>
+              <div class="kpi-value"><strong id="active-requests">—</strong><span id="active-requests-unit">active</span></div>
+              <div class="kpi-meta"><span id="queue-meta">Queue —</span><svg class="sparkline sparkline-muted" id="spark-active" viewBox="0 0 120 36" aria-label="Active requests trend"><path data-spark-area></path><path data-spark-line></path></svg></div>
+            </article>
+            <article class="kpi-card">
+              <div class="card-label"><span>KV occupancy</span></div>
+              <div class="kpi-value"><strong id="kv-occupancy">—</strong><span>%</span></div>
+              <div class="kpi-meta"><span id="kv-meta">KV pool —</span><svg class="sparkline sparkline-violet" id="spark-kv" viewBox="0 0 120 36" aria-label="KV occupancy trend"><path data-spark-area></path><path data-spark-line></path></svg></div>
+            </article>
+            <article class="kpi-card">
+              <div class="card-label"><span title="Cached prompt tokens divided by all processed and cached prompt tokens since the model started.">Prompt reuse</span></div>
+              <div class="kpi-value"><strong id="cache-efficiency">—</strong><span>%</span></div>
+              <div class="kpi-meta"><span id="cache-meta">Cache bytes —</span><svg class="sparkline sparkline-blue" id="spark-cache" viewBox="0 0 120 36" aria-label="Prompt reuse trend"><path data-spark-area></path><path data-spark-line></path></svg></div>
+            </article>
+          </div>
+
+          <div class="content-grid overview-grid">
+            <article class="panel chart-panel">
+              <div class="panel-heading">
+                <div><p class="eyebrow">THROUGHPUT</p><h3>Generation activity</h3></div>
+                <div class="range-switch" role="group" aria-label="History range">
+                  <button type="button" data-range="1h" class="is-active">1h</button><button type="button" data-range="24h">24h</button><button type="button" data-range="7d">7d</button>
+                </div>
+              </div>
+              <div class="chart-summary"><strong id="chart-current-rate">—</strong><span>t/s rolling</span><span class="summary-separator"></span><span id="chart-range-label">Last hour</span></div>
+              <div class="chart-wrap"><svg class="line-chart" id="overview-chart" viewBox="0 0 720 250" role="img" aria-label="Output throughput history"><g data-chart-grid></g><g data-chart-series></g></svg><div class="chart-empty" id="overview-chart-empty">No history yet</div></div>
+              <div class="chart-foot"><span><i class="legend-swatch amber"></i>Output / last minute</span><span id="chart-points">0 samples</span></div>
+            </article>
+
+            <article class="panel memory-panel">
+              <div class="panel-heading"><div><p class="eyebrow">SHARED MEMORY</p><h3>Engine allocation</h3></div><span class="panel-kicker" id="allocation-total">—</span></div>
+              <p class="panel-copy">Engine reported resident allocation. Kernel MemAvailable can overstate reclaimable headroom because GPU-pinned weights can count as cache, so it stays separate from engine allocation.</p>
+              <div class="allocation-bar" id="allocation-bar" aria-label="Engine memory allocation"><span data-segment="weights"></span><span data-segment="kv"></span><span data-segment="working"></span></div>
+              <div class="allocation-list">
+                <div><span><i class="legend-swatch amber"></i>Weights</span><strong id="allocation-weights">—</strong></div>
+                <div><span><i class="legend-swatch violet"></i>KV pool</span><strong id="allocation-kv">—</strong></div>
+                <div><span><i class="legend-swatch blue"></i>Working</span><strong id="allocation-working">—</strong></div>
+              </div>
+              <div class="panel-foot"><span>Source</span><strong id="allocation-source">—</strong></div>
+            </article>
+          </div>
+
+          <div class="content-grid lower-grid">
+            <article class="panel runtime-panel">
+              <div class="panel-heading"><div><p class="eyebrow">RUNTIME</p><h3>Request activity</h3></div><span class="live-mark"><i></i>Live</span></div>
+              <div class="metric-list two-column">
+                <div class="metric-row"><span>Completed requests</span><strong id="completed-requests">—</strong></div>
+                <div class="metric-row"><span>Queued requests</span><strong id="queued-requests">—</strong></div>
+                <div class="metric-row"><span>Prompt tokens</span><strong id="prompt-tokens">—</strong></div>
+                <div class="metric-row"><span>Output tokens</span><strong id="output-tokens">—</strong></div>
+                <div class="metric-row"><span>Context window</span><strong id="context-window">—</strong></div>
+                <div class="metric-row"><span>KV pool capacity</span><strong id="kv-positions">—</strong></div>
+              </div>
+            </article>
+            <article class="panel gpu-panel">
+              <div class="panel-heading"><div><p class="eyebrow">ACCELERATOR</p><h3>GPU snapshot</h3></div><span class="panel-kicker" id="gpu-clock">—</span></div>
+              <div class="resource-line"><div><span>Busy</span><strong id="gpu-busy">—</strong></div><div class="progress-track"><span id="gpu-busy-bar"></span></div></div>
+              <div class="metric-list compact-list"><div class="metric-row"><span>Temperature</span><strong id="gpu-temp">—</strong></div><div class="metric-row"><span>Reported power</span><strong id="gpu-power">—</strong></div></div>
+              <p class="panel-note">Power is the driver-reported GPU reading, not whole-machine draw.</p>
+            </article>
+            <article class="panel events-panel">
+              <div class="panel-heading"><div><p class="eyebrow">SERVICE LOG</p><h3>Recent events</h3></div><button class="text-button" type="button" data-page-target="activity">View all <span aria-hidden="true">→</span></button></div>
+              <div class="event-list" id="overview-events"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" data-page="performance" aria-labelledby="page-heading" hidden>
+          <div class="page-intro compact-intro"><div><p class="eyebrow accent">PERFORMANCE</p><h2>Generation performance</h2><p class="muted">Throughput gauges keep their labels separate so decode speed is not confused with elapsed output rate.</p></div></div>
+          <div class="kpi-grid performance-kpis">
+            <article class="kpi-card kpi-accent"><div class="card-label"><span>Output / last minute</span><span class="label-help" title="Rolling wall-clock rate from completion-reported tokens">i</span></div><div class="kpi-value"><strong id="perf-output-rate">—</strong><span>t/s</span></div><div class="kpi-meta"><span>Rolling aggregate</span></div></article>
+            <article class="kpi-card"><div class="card-label"><span>Last measured decode</span></div><div class="kpi-value"><strong id="perf-decode-rate">—</strong><span>t/s</span></div><div class="kpi-meta"><span id="perf-decode-age">No generation measured</span></div></article>
+            <article class="kpi-card"><div class="card-label"><span>Prompt processing</span></div><div class="kpi-value"><strong id="perf-prefill-rate">—</strong><span>t/s</span></div><div class="kpi-meta"><span>Engine gauge</span></div></article>
+            <article class="kpi-card"><div class="card-label"><span>MTP acceptance</span></div><div class="kpi-value"><strong id="perf-draft-accept">—</strong><span>%</span></div><div class="kpi-meta"><span id="perf-cache-hit">Prompt cache —</span></div></article>
+          </div>
+          <div class="content-grid performance-grid">
+            <article class="panel chart-panel wide-panel"><div class="panel-heading"><div><p class="eyebrow">HISTORY</p><h3>Output / last minute</h3></div><span class="panel-kicker" id="perf-chart-source">—</span></div><div class="chart-wrap large-chart"><svg class="line-chart" id="performance-chart" viewBox="0 0 920 300" role="img" aria-label="Performance history"><g data-chart-grid></g><g data-chart-series></g></svg><div class="chart-empty" id="performance-chart-empty">No history yet</div></div><div class="chart-foot"><span><i class="legend-swatch amber"></i>Output / last minute</span><span id="perf-chart-points">0 samples</span></div></article>
+            <article class="panel rate-panel"><div class="panel-heading"><div><p class="eyebrow">ENGINE GAUGES</p><h3>Measured rates</h3></div></div><div class="metric-list"><div class="metric-row"><span>Last measured decode</span><strong id="perf-decode-detail">—</strong></div><div class="metric-row"><span>Prompt processing</span><strong id="perf-prefill-detail">—</strong></div><div class="metric-row"><span>Prompt token reuse</span><strong id="perf-cache-detail">—</strong></div><div class="metric-row"><span>Draft acceptance</span><strong id="perf-draft-detail">—</strong></div><div class="metric-row"><span>Cached bytes</span><strong id="perf-cache-bytes">—</strong></div></div><p class="panel-note">Decode is the engine's most recent measured generation. It may remain visible while the model is idle.</p></article>
+          </div>
+        </section>
+
+        <section class="page" data-page="resources" aria-labelledby="page-heading" hidden>
+          <div class="page-intro compact-intro"><div><p class="eyebrow accent">RESOURCES</p><h2>Node resources</h2><p class="muted">Host counters and engine allocations are shown independently to keep shared memory accounting clear.</p></div></div>
+          <div class="resource-grid">
+            <article class="panel resource-card"><div class="panel-heading"><div><p class="eyebrow">PROCESSOR</p><h3>CPU load</h3></div><strong class="resource-value" id="resource-cpu">—</strong></div><div class="progress-track tall"><span id="resource-cpu-bar"></span></div><div class="resource-card-foot"><span>Load average</span><strong id="resource-load">—</strong></div><div class="resource-card-foot"><span>Uptime</span><strong id="resource-uptime">—</strong></div></article>
+            <article class="panel resource-card"><div class="panel-heading"><div><p class="eyebrow">ACCELERATOR</p><h3>GPU busy</h3></div><strong class="resource-value" id="resource-gpu">—</strong></div><div class="progress-track tall"><span id="resource-gpu-bar"></span></div><div class="resource-card-foot"><span>Temperature</span><strong id="resource-temp">—</strong></div><div class="resource-card-foot"><span>Clock</span><strong id="resource-clock">—</strong></div></article>
+            <article class="panel resource-card"><div class="panel-heading"><div><p class="eyebrow">SYSTEM MEMORY</p><h3>RAM in use</h3></div><strong class="resource-value" id="resource-memory">—</strong></div><div class="progress-track tall"><span id="resource-memory-bar"></span></div><div class="resource-card-foot"><span>Used</span><strong id="resource-memory-used">—</strong></div><div class="resource-card-foot"><span>Available</span><strong id="resource-memory-available">—</strong></div></article>
+            <article class="panel resource-card"><div class="panel-heading"><div><p class="eyebrow">STORAGE</p><h3>System disk</h3></div><strong class="resource-value" id="resource-disk">—</strong></div><div class="progress-track tall"><span id="resource-disk-bar"></span></div><div class="resource-card-foot"><span>Used</span><strong id="resource-disk-used">—</strong></div><div class="resource-card-foot"><span>Free</span><strong id="resource-disk-free">—</strong></div></article>
+          </div>
+          <div class="content-grid resources-lower-grid">
+            <article class="panel shared-panel"><div class="panel-heading"><div><p class="eyebrow">GPU MEMORY</p><h3>Shared memory view</h3></div><span class="panel-kicker" id="resource-gtt">—</span></div><div class="memory-compare"><div class="compare-label"><span>GTT used</span><strong id="resource-gtt-used">—</strong></div><div class="progress-track"><span id="resource-gtt-bar"></span></div><div class="compare-label"><span>VRAM used</span><strong id="resource-vram-used">—</strong></div><div class="progress-track"><span id="resource-vram-bar"></span></div></div><p class="panel-note">GPU and CPU share physical RAM. Engine allocation is reported separately above.</p></article>
+            <article class="panel network-panel"><div class="panel-heading"><div><p class="eyebrow">NETWORK</p><h3>Interface traffic</h3></div><span class="panel-kicker">LAN</span></div><div class="network-stat"><span class="network-arrow down" aria-hidden="true">↓</span><div><span>Inbound</span><strong id="network-rx">—</strong></div></div><div class="network-stat"><span class="network-arrow up" aria-hidden="true">↑</span><div><span>Outbound</span><strong id="network-tx">—</strong></div></div></article>
+          </div>
+        </section>
+
+        <section class="page" data-page="activity" aria-labelledby="page-heading" hidden>
+          <div class="page-intro compact-intro"><div><p class="eyebrow accent">ACTIVITY</p><h2>Service activity</h2><p class="muted">Events are limited to sanitized service and source health messages.</p></div><span class="panel-kicker" id="activity-event-count">0 events</span></div>
+          <div class="content-grid activity-grid">
+            <article class="panel full-events-panel"><div class="panel-heading"><div><p class="eyebrow">EVENT STREAM</p><h3>Recent events</h3></div><span class="panel-kicker">Newest first</span></div><div class="event-list full-event-list" id="activity-events"></div></article>
+            <article class="panel source-panel"><div class="panel-heading"><div><p class="eyebrow">COLLECTORS</p><h3>Source health</h3></div></div><div class="source-list"><div class="source-row"><span class="source-indicator" id="model-source-dot"></span><div><strong>Model service</strong><span id="model-source-detail">Waiting for data</span></div><em id="model-source-state">—</em></div><div class="source-row"><span class="source-indicator" id="hardware-source-dot"></span><div><strong>Hardware sensors</strong><span id="hardware-source-detail">Waiting for data</span></div><em id="hardware-source-state">—</em></div></div><p class="panel-note">Missing metrics display —. When available, each source shows the age of its last good sample.</p></article>
+          </div>
+        </section>
+
+        <footer class="app-footer"><span>strixDash · read-only monitor</span><span>Engine gauges are sampled from the node</span></footer>
+      </main>
+    </div>
+    <script src="app.js" defer></script>
+  </body>
+</html>
